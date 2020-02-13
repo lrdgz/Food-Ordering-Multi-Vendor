@@ -64,13 +64,6 @@ class User extends Authenticatable
         return $this->hasMany(Product::class);
     }
 
-    public function favourites(){
-        return $this->hasMany(Favourite::class);
-    }
-
-    public function follows(){
-        return $this->hasMany(Follow::class);
-    }
 
     public function billingAddress(){
         return $this->hasMany(Address::class, 'id', 'billing_address');
@@ -90,6 +83,14 @@ class User extends Authenticatable
 
     public function invoices(){
         return $this->hasMany(Invoice::class);
+    }
+
+    public function favourites(){
+        return $this->belongsToMany(Product::class);
+    }
+
+    public function followedRestaurants(){
+        return $this->belongsToMany(Restaurant::class);
     }
 
 }

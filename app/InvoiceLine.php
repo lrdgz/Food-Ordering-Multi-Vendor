@@ -15,4 +15,12 @@ class InvoiceLine extends Model
         'payment_id', 'invoice_id', 'amount_before',
         'amount_after', 'line_total','platform_share',
     ];
+
+    public function invoice(){
+        return $this->belongsTo(Invoice::class);
+    }
+
+    public function payment(){
+        return $this->belongsTo(Payment::class);
+    }
 }

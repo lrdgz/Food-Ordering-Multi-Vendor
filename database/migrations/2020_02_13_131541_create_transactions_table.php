@@ -17,6 +17,7 @@ class CreateTransactionsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('invoice_id');
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }

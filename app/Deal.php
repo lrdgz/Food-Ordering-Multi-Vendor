@@ -12,6 +12,14 @@ class Deal extends Model
      * @var array
      */
     protected $fillable = [
-        'end_at', 'qty', 'discount',
+        'end_at', 'qty', 'discount', 'restaurant_id'
     ];
+
+    public function products(){
+        return $this->belongsToMany(Product::class);
+    }
+
+    public function restaurant(){
+        return $this->belongsTo(Restaurant::class);
+    }
 }

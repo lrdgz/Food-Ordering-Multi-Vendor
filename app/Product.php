@@ -36,4 +36,12 @@ class Product extends Model
     public function media(){
         return $this->hasMany(Media::class, 'belongs_to', 'id');
     }
+
+    public function deals(){
+        return $this->belongsToMany(Product::class);
+    }
+
+    public function favouriteUsers(){
+        return $this->belongsToMany(User::class);
+    }
 }

@@ -15,7 +15,7 @@ class CreateDealsTable extends Migration
     {
         Schema::create('deals', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('restaurant');
+            $table->unsignedBigInteger('restaurant_id');
             $table->dateTime('end_at');
             $table->double('qty');
             $table->double('discount');
