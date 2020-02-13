@@ -15,15 +15,18 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->bigIncrements('id');
+
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('restaurant_id');
+            $table->unsignedBigInteger('category_id');
+
             $table->string('title');
             $table->text('description');
             $table->double('price');
             $table->double('discount')->default(0);
             $table->string('prepare_time')->nullable();
             $table->string('chef')->nullable();
-            $table->unsignedBigInteger('likes')->default(0);
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('restaurant_id');
+            $table->unsignedInteger('likes')->default(0);
             $table->timestamps();
         });
     }

@@ -12,8 +12,28 @@ class Product extends Model
      * @var array
      */
     protected $fillable = [
-        'title','description', 'price',
+        'title', 'description', 'price',
         'discount', 'prepare_time',
-        'chef','likes','user_id','restaurant_id'
+        'chef', 'likes', 'user_id', 'restaurant_id', 'category_id'
     ];
+
+    public function restaurant(){
+        return $this->belongsTo(Restaurant::class);
+    }
+
+    public function owner(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
+
+    public function tags(){
+        return $this->belongsToMany(Tag::class);
+    }
+
+    public function media(){
+        return $this->hasMany(Media::class, 'belongs_to', 'id');
+    }
 }

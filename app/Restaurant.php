@@ -32,4 +32,8 @@ class Restaurant extends Model
     public function address(){
         return $this->hasOne(Address::class);
     }
+
+    public function media(){
+        return $this->hasMany(Media::class, 'belongs_to', 'id');
+    }
 }
