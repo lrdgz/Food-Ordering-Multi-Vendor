@@ -12,5 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+//    return view('welcome');
+    return new \App\Mail\UserPasswordPin(888888);
+
 });

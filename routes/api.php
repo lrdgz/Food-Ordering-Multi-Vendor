@@ -15,6 +15,9 @@ use Illuminate\Http\Request;
 
 Route::post('register', 'Api\Auth\AuthController@register');
 Route::post('login', 'Api\Auth\AuthController@login');
+Route::post('recover', 'Api\Auth\AuthController@recover');
+Route::post('change', 'Api\Auth\AuthController@change');
+
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return new \App\Http\Resources\UserResource($request->user());

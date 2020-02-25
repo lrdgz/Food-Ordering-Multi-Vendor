@@ -3,14 +3,31 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ApiChangePasswordRequest;
 use App\Http\Requests\ApiLoginRequest;
+use App\Http\Requests\ApiRecoverPasswordRequest;
 use App\Http\Requests\ApiRegisterRequest;
+use App\Http\Resources\UserResource;
+use App\Mail\UserPasswordPin;
 use App\User;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
+
+    private $unwantedPins = [
+        111111,222222,333333,
+        444444,555555,666666,
+        777777,888888,999999
+    ];
+
+    private function inUnWanted($pin){
+        return in_array( $pin, $this->unwantedPins );
+    }
 
     public function register(ApiRegisterRequest $request){
         /*
@@ -24,11 +41,19 @@ class AuthController extends Controller
             'type'          => $request->type,
         ]);
 
-        $token = $user->createToken('api_token')->accessToken;
-        return response([
-            'user_id' => $user->id,
-            'access_token' => $token,
+        $http = new Client();
+        $response = $http->post('http://foodordering.test/oauth/token', [
+            'form_params' => [
+                'grant_type' => 'password',
+                'client_id'  => '2',
+                'client_secret' => 'jMDVHRYkE5IRRZ2fQzp0R20DEdf2szSZYhP3EiYu',
+                'username' => $request->email,
+                'password' => $request->password,
+                'scope' => '',
+            ],
         ]);
+
+        return json_decode((string) $response->getBody(), true);
     }
 
 
@@ -40,11 +65,65 @@ class AuthController extends Controller
             return response([ 'error' => 'forbidden', 'message' => 'check your username and password' ], 403);
         }
 
-        $token = auth()->user()->createToken('api_token')->accessToken;
-        return response([
-            'user_id' => auth()->id(),
-            'access_token' => $token,
+        $http = new Client();
+        $response = $http->post('http://foodordering.test/oauth/token', [
+            'form_params' => [
+                'grant_type' => 'password',
+                'client_id'  => '2',
+                'client_secret' => 'jMDVHRYkE5IRRZ2fQzp0R20DEdf2szSZYhP3EiYu',
+                'username' => $request->email,
+                'password' => $request->password,
+                'scope' => '',
+            ],
         ]);
+
+        return json_decode((string) $response->getBody(), true);
+    }
+
+
+    public function recover(ApiRecoverPasswordRequest $request){
+       //TODO: Check if email exists
+        $user = User::where(['email' => $request->email])->first();
+        if (is_null($user)){
+            return response([
+                'error' => 'email does match our records'
+            ], 404);
+        }
+
+       //TODO: Send the recover password to link that email
+        $pin = rand(111111, 999999);
+        foreach ($this->unwantedPins as $unwantedPin){
+            if ($pin == $unwantedPin){
+                $pin = rand(111111, 999999);
+            }
+        }
+
+        $user->pin = $pin;
+        $user->save();
+
+        Mail::to($user)->queue( new UserPasswordPin( $pin ) );
+
+        return response(['message' => 'a six digit pin number has been sent to your email address'], 200);
+    }
+
+
+    public function change(ApiChangePasswordRequest $request){
+        //TODO: Find user by pin
+        $user = User::where(['pin' => $request->pin])->first();
+        if (is_null($user)){
+            return response([
+                'error' => 'user pin incorrect'
+            ], 404);
+        }
+
+        //TODO: Change the password wit the new one
+        $user->password = Hash::make( $request->password );
+        $user->pin = null;
+        $user->save();
+
+        return response([
+            'message' => 'Please login with your new password'
+        ], 200);
     }
 
 }
