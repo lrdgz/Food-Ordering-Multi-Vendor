@@ -8,6 +8,7 @@ use App\Http\Requests\ApiLoginRequest;
 use App\Http\Requests\ApiRecoverPasswordRequest;
 use App\Http\Requests\ApiRegisterRequest;
 use App\Http\Resources\UserResource;
+use App\Mail\NewUserRegistered;
 use App\Mail\UserPasswordPin;
 use App\User;
 use GuzzleHttp\Client;
@@ -18,6 +19,9 @@ use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
+
+    private $CLIENT_ID = 2;
+    private $CLIENT_SECRET = 'vKpQG1LRxllUw4NTzwngtRj5IgJWbYUj6IWtK4eK';
 
     private $unwantedPins = [
         111111,222222,333333,
@@ -30,6 +34,8 @@ class AuthController extends Controller
     }
 
     public function register(ApiRegisterRequest $request){
+        $token = bin2hex( openssl_random_pseudo_bytes( 30 ) );
+
         /*
          * @var $user User
          */
@@ -39,14 +45,17 @@ class AuthController extends Controller
             'email'         => $request->email,
             'password'      => Hash::make($request->password),
             'type'          => $request->type,
+            'email_token'   => $token,
         ]);
+
+        Mail::to( $user )->queue( new NewUserRegistered($token) );
 
         $http = new Client();
         $response = $http->post('http://foodordering.test/oauth/token', [
             'form_params' => [
                 'grant_type' => 'password',
-                'client_id'  => '2',
-                'client_secret' => 'jMDVHRYkE5IRRZ2fQzp0R20DEdf2szSZYhP3EiYu',
+                'client_id'  => $this->CLIENT_ID,
+                'client_secret' => $this->CLIENT_SECRET,
                 'username' => $request->email,
                 'password' => $request->password,
                 'scope' => '',
@@ -69,8 +78,8 @@ class AuthController extends Controller
         $response = $http->post('http://foodordering.test/oauth/token', [
             'form_params' => [
                 'grant_type' => 'password',
-                'client_id'  => '2',
-                'client_secret' => 'jMDVHRYkE5IRRZ2fQzp0R20DEdf2szSZYhP3EiYu',
+                'client_id'  => $this->CLIENT_ID,
+                'client_secret' => $this->CLIENT_SECRET,
                 'username' => $request->email,
                 'password' => $request->password,
                 'scope' => '',
