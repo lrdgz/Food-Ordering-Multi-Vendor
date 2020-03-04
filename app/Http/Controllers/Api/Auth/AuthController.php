@@ -21,7 +21,7 @@ class AuthController extends Controller
 {
 
     private $CLIENT_ID = 2;
-    private $CLIENT_SECRET = 'vKpQG1LRxllUw4NTzwngtRj5IgJWbYUj6IWtK4eK';
+    private $CLIENT_SECRET = 'EE15n3EinJlv5DHZqDbtiltDcrEngyKEndod4Ud3';
 
     private $unwantedPins = [
         111111,222222,333333,

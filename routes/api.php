@@ -29,6 +29,16 @@ Route::get('vendors/{vendor}', 'Api\VendorController@show');
 Route::get('app-url', 'Api\AppUtilityController@appUrl');
 Route::post('email', 'Api\AppUtilityController@email');
 
+
+/*VENDOR DASHBOARD*/
+Route::post('tags', 'Api\TagController@store');
+Route::post('restaurants', 'Api\VendorRestaurantController@store');
+
+
+/*SHARED API*/
+Route::get('tags', 'Api\TagController@index');
+
+
 /*IMPLEMENT AUTH ROUTES*/
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return new \App\Http\Resources\UserResource($request->user());

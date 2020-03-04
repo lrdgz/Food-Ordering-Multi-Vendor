@@ -11,6 +11,11 @@ class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
 
+    const CUSTOMER = 'customer';
+    const VENDOR = 'vendor';
+
+    const USERS_TYPES = [self::CUSTOMER, self::VENDOR];
+
     /**
      * The attributes that are mass assignable.
      *
