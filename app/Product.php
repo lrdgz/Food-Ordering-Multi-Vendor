@@ -22,7 +22,7 @@ class Product extends Model
     }
 
     public function owner(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function category(){
@@ -43,5 +43,9 @@ class Product extends Model
 
     public function favouriteUsers(){
         return $this->belongsToMany(User::class);
+    }
+
+    public function reviews(){
+        return $this->hasMany(Review::class);
     }
 }

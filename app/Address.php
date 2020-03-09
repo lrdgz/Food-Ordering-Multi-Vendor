@@ -12,8 +12,7 @@ class Address extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'description', 'price',
-        'discount', 'prepare_time',
-        'chef', 'likes', 'user_id', 'store_id'
+        'street_name', 'street_number', 'suburb',
+        'city', 'state', 'post_code', 'country',
     ];
 }

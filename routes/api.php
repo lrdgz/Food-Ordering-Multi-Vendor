@@ -37,6 +37,14 @@ Route::post('restaurants', 'Api\VendorRestaurantController@store');
 
 /*SHARED API*/
 Route::get('tags', 'Api\TagController@index');
+Route::get('categories', 'Api\CategoryController@index');
+Route::get('categories/{category}/products', 'Api\CategoryController@showProducts');
+Route::get('restaurants', 'Api\RestaurantController@index');
+Route::get('restaurants/{restaurant}', 'Api\RestaurantController@show');
+Route::get('restaurants/{restaurant}/products', 'Api\RestaurantController@showProducts');
+Route::get('product/{product}/reviews', 'Api\ReviewController@index');
+Route::get('products', 'Api\ProductController@index');
+Route::get('products/{product}', 'Api\ProductController@show');
 
 
 /*IMPLEMENT AUTH ROUTES*/
